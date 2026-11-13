@@ -54,7 +54,26 @@ form.addEventListener('submit', event => {
   window.open(url, '_blank', 'noopener,noreferrer');
 });
 const config = window.AGENDA_CONFIG || {};
-if (config.videoUrl) {
+if (config.youtubeId && /^[A-Za-z0-9_-]{11}$/.test(config.youtubeId)) {
+  const frame = document.getElementById('videoFrame');
+  const player = document.createElement('iframe');
+  player.src = 'https://www.youtube.com/embed/' + config.youtubeId + '?playsinline=1&rel=0';
+  player.title = 'Agenda Litúrgica Maronita 2027 — video promocional';
+  player.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+  player.allowFullscreen = true;
+  player.referrerPolicy = 'strict-origin-when-cross-origin';
+  player.style.cssText = 'display:block;width:100%;aspect-ratio:16/9;min-height:220px;border:0;';
+  frame.classList.add('has-video');
+  frame.style.display = 'block';
+  frame.replaceChildren(player);
+  const link = document.createElement('a');
+  link.href = 'https://www.youtube.com/watch?v=' + config.youtubeId;
+  link.target = '_blank';
+  link.rel = 'noopener';
+  link.textContent = 'Ver también en YouTube';
+  link.style.cssText = 'display:block;margin-top:10px;font-size:12px;text-align:right;';
+  frame.after(link);
+} else if (config.videoUrl) {
   const video = document.getElementById('promoVideo');
   video.src = config.videoUrl;
   if (config.videoPoster) video.poster = config.videoPoster;
